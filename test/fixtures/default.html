@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Replicant Test Fixture</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("pushstate-link").addEventListener("click", function(event) {
+          history.pushState({}, null, event.target.href)
+          event.preventDefault()
+        })
+
+        document.getElementById("replacestate-link").addEventListener("click", function(event) {
+          history.replaceState({}, null, event.target.href)
+          event.preventDefault()
+        })
+
+        document.getElementById("hashchange-link").addEventListener("click", function(event) {
+          location.hash = event.target.hash
+          event.preventDefault()
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <form method="get" action="/fixtures/form.html">
+          <input type="submit" id="form-submit">
+        </form>
+      </li>
+      <li>
+        <a id="pushstate-link" href="push.html">pushState link</a>
+      </li>
+      <li>
+        <a id="replacestate-link" href="replace.html">replaceState link</a>
+      </li>
+      <li>
+        <a id="hashchange-link" href="#hash">Hash change link</a>
+      </li>
+    </ul>
+  </body>
+</html>

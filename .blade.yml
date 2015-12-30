@@ -1,0 +1,15 @@
+load_paths:
+  - polyfills
+  - src
+  - test
+
+logical_paths:
+  - polyfills.js
+  - replicant.js
+  - test.js
+
+build:
+  logical_paths:
+    - replicant.js
+  path: dist
+  js_compressor: uglifier

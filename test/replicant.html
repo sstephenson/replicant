@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Replicant</title>
+    <script src="polyfills.js"></script>
+    <script src="replicant.js"></script>
+    <script>
+      window.addEventListener("replicant-initialize", function(event) {
+        console.log(event.type, event.target)
+      })
+
+      window.addEventListener("replicant-navigate", function(event) {
+        console.log(event.type + " " + event.action, event.target.location.toString())
+      })
+
+      window.addEventListener("replicant-load", function(event) {
+        console.log(event.type, event.target.location.toString())
+      })
+    </script>
+  </head>
+  <body>
+    <replicant-frame></replicant-frame>
+  </body>
+</html>
