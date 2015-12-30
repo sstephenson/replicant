@@ -1,5 +1,6 @@
 #= require replicant/register_element
 #= require replicant/frame_controller
+#= require replicant/session
 
 Replicant.registerElement "replicant-frame",
   defaultCSS: """
@@ -67,3 +68,7 @@ Replicant.registerElement "replicant-frame",
   goForward:
     value: ->
       @window?.history.forward()
+
+  createSession:
+    value: ->
+      new Replicant.Session this
