@@ -1,7 +1,7 @@
 #= require replicant/instrument_method
 #= require replicant/trigger_event
 
-{instrumentMethod, memoizeFunction, triggerEvent} = Replicant
+{instrumentMethod, triggerEvent} = Replicant
 
 class Replicant.FrameController
   constructor: (@element) ->
