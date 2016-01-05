@@ -43,7 +43,7 @@ class Replicant.Session
   afterNavigateEvent: (callback) ->
     @element.addEventListener "replicant-navigate", handler = (event) =>
       @element.removeEventListener("replicant-navigate", handler)
-      callback(event.action)
+      callback(action: event.action, location: @element.location)
 
   querySelector: (selector) ->
     @element.document?.querySelector(selector) ?
