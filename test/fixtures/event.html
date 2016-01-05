@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Replicant Test Fixture</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("event-link").addEventListener("click", function(event) {
+          var e = document.createEvent("Events")
+          e.initEvent("test-event", true, true)
+          e.data = "hello"
+          dispatchEvent(e)
+
+          event.preventDefault()
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <a id="event-link" href="#">Trigger event</a>
+  </body>
+</html>

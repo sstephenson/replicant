@@ -20,11 +20,15 @@ class Replicant.Session
     @navigate =>
       clickElement(@querySelector(selector))
 
+  waitForEvent: (eventName) ->
+    waitForEvent(@element.window, eventName)
+
   # Private
 
   navigate: (callback) ->
     @promiseNavigation (resolve) =>
-      @afterNavigateEvent(resolve)
+      waitForEvent(@element, "replicant-navigate").then (event) =>
+        resolve(action: event.action, location: @element.location)
       callback()
 
   promiseNavigation: (callback) ->
@@ -40,14 +44,15 @@ class Replicant.Session
           @navigating = false
           throw error
 
-  afterNavigateEvent: (callback) ->
-    @element.addEventListener "replicant-navigate", handler = (event) =>
-      @element.removeEventListener("replicant-navigate", handler)
-      callback(action: event.action, location: @element.location)
-
   querySelector: (selector) ->
     @element.document?.querySelector(selector) ?
       throw new Error "No element matching selector `#{selector}'"
 
   clickElement = (element) ->
     Replicant.triggerEvent(element, "click")
+
+  waitForEvent = (element, eventName) ->
+    new Promise (resolve, reject) ->
+      element.addEventListener eventName, handler = (event) ->
+        element.removeEventListener(eventName, handler)
+        resolve(event)
