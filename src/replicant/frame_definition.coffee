@@ -1,6 +1,7 @@
 #= require replicant/register_element
 #= require replicant/frame_controller
 #= require replicant/session
+#= require replicant/location
 
 Replicant.registerElement "replicant-frame",
   defaultCSS: """
@@ -50,7 +51,7 @@ Replicant.registerElement "replicant-frame",
 
   location:
     get: ->
-      @window?.location
+      new Replicant.Location @window?.location
 
     set: (location) ->
       @iframeElement.src = location.toString()
