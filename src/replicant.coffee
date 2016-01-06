@@ -1,4 +1,2 @@
-#= require_self
-#= require replicant/frame_definition
-
-@Replicant = {}
+#= require polyfills
+#= require replicant-core
