@@ -14,8 +14,7 @@
   fixture = document.getElementById("qunit-fixture")
   element = document.createElement("replicant-frame")
   waitForEvent element, "replicant-initialize", ->
-    waitForEvent element, "replicant-load", ->
-      callback(element)
+    callback(element)
   fixture.appendChild(element)
   element
 

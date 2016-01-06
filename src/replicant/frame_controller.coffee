@@ -7,8 +7,7 @@ class Replicant.FrameController
   constructor: (@element) ->
 
   elementAttached: ->
-    if @initialize()
-      @attachIframeElement()
+    @attachIframeElement()
 
   getIframeElement: ->
     @iframeElement ?= (
@@ -43,8 +42,9 @@ class Replicant.FrameController
     defer =>
       @instrumentHistoryMethods()
       @registerEventListeners()
-      @completeNavigationWithAction("load")
-      @completeLoad()
+      unless @initialize()
+        @completeNavigationWithAction("load")
+        @completeLoad()
 
   instrumentHistoryMethods: ->
     {prototype} = @element.window.history.constructor
