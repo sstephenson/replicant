@@ -29,7 +29,7 @@ class Replicant.Session
     @promiseNavigation (resolve) =>
       waitForEvent(@element, "replicant-navigate").then (event) =>
         resolve(action: event.action, location: @element.location)
-      callback()
+      setTimeout(callback, 1)
 
   promiseNavigation: (callback) ->
     if @navigating

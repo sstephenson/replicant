@@ -27,7 +27,7 @@ QUnit.module "Replicant.Session"
 @frameTest "waiting for an event", (frame, assert, done) ->
   session = frame.createSession()
   session.goToLocation("/fixtures/event.html").then (navigation) ->
+    session.clickSelector("#event-link")
     session.waitForEvent("test-event").then (event) ->
       assert.equal(event.data, "hello")
       done()
-    session.clickSelector("#event-link")
