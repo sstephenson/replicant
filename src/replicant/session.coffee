@@ -4,59 +4,48 @@ class Replicant.Session
   constructor: (@element) ->
     @navigating = false
 
-  evaluate: (script) ->
+  evaluate: (script, callback) ->
     defer =>
-      @element.evaluate(script)
+      result = @element.evaluate(script)
+      callback?(result)
 
-  goToLocation: (location) ->
-    @navigate =>
+  goToLocation: (location, callback) ->
+    @navigate callback, =>
       @element.location = location
 
-  goBack: ->
-    @navigate =>
+  goBack: (callback) ->
+    @navigate callback, =>
       @element.goBack()
 
-  goForward: ->
-    @navigate =>
+  goForward: (callback) ->
+    @navigate callback, =>
       @element.goForward()
 
-  clickSelector: (selector) ->
-    @navigate =>
+  clickSelector: (selector, callback) ->
+    @navigate callback, =>
       clickElement(@querySelector(selector))
 
-  wait: ->
-    new Promise (resolve, reject) ->
-      defer(resolve)
+  wait: (callback) ->
+    defer(callback)
 
   waitForEvent: (eventName, callback) ->
-    if callback?
-      waitForEventWithCallback(@element.window, eventName, callback)
-    else
-      waitForEventWithPromise(@element.window, eventName)
+    waitForEvent(@element.window, eventName, callback)
 
-  waitForNavigation: ->
-    @navigate -> true
+  waitForNavigation: (callback) ->
+    @navigate callback, -> true
 
   # Private
 
-  navigate: (callback) ->
-    @promiseNavigation (resolve) =>
-      waitForEventWithCallback @element, "replicant-navigate", (event) =>
-        resolve(action: event.action, location: @element.location)
-      defer(callback)
-
-  promiseNavigation: (callback) ->
+  navigate: (resolve, callback) ->
     if @navigating
-      Promise.reject(new Error "Already navigating")
+      throw new Error "Already navigating"
     else
       @navigating = true
-      new Promise(callback)
-        .then (result) =>
-          @navigating = false
-          result
-        .catch (error) =>
-          @navigating = false
-          throw error
+      waitForEvent @element, "replicant-navigate", (event) =>
+        @navigating = false
+        defer =>
+          resolve?(action: event.action, location: @element.location)
+      defer(callback)
 
   querySelector: (selector) ->
     @element.document?.querySelector(selector) ?
@@ -65,14 +54,10 @@ class Replicant.Session
   clickElement = (element) ->
     Replicant.triggerEvent(element, "click")
 
-  waitForEventWithCallback = (element, eventName, callback) ->
+  waitForEvent = (element, eventName, callback) ->
     element.addEventListener eventName, handler = (event) ->
       element.removeEventListener(eventName, handler)
-      callback(event)
-
-  waitForEventWithPromise = (element, eventName) ->
-    new Promise (resolve, reject) ->
-      waitForEventWithCallback(element, eventName, resolve)
+      callback?(event)
 
   defer = (callback) ->
-    setTimeout(callback, 1)
+    setTimeout(callback, 1) if callback
