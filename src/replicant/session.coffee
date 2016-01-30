@@ -4,6 +4,10 @@ class Replicant.Session
   constructor: (@element) ->
     @navigating = false
 
+  evaluate: (script) ->
+    defer =>
+      @element.evaluate(script)
+
   goToLocation: (location) ->
     @navigate =>
       @element.location = location
@@ -29,7 +33,7 @@ class Replicant.Session
     @promiseNavigation (resolve) =>
       waitForEvent(@element, "replicant-navigate").then (event) =>
         resolve(action: event.action, location: @element.location)
-      setTimeout(callback, 1)
+      defer(callback)
 
   promiseNavigation: (callback) ->
     if @navigating
@@ -56,3 +60,6 @@ class Replicant.Session
       element.addEventListener eventName, handler = (event) ->
         element.removeEventListener(eventName, handler)
         resolve(event)
+
+  defer = (callback) ->
+    setTimeout(callback, 1)

@@ -62,6 +62,10 @@ Replicant.registerElement "replicant-frame",
 
   # Methods
 
+  evaluate:
+    value: (script) ->
+      @window?.eval(script)
+
   goBack:
     value: ->
       @window?.history.back()
