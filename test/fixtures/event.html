@@ -11,6 +11,10 @@
           e.data = "hello"
           dispatchEvent(e)
 
+          if (!e.defaultPrevented) {
+            event.target.innerHTML += "<div id=hello>"
+          }
+
           event.preventDefault()
         })
       })

@@ -24,18 +24,24 @@ class Replicant.Session
     @navigate =>
       clickElement(@querySelector(selector))
 
-  waitForEvent: (eventName) ->
-    waitForEvent(@element.window, eventName)
   wait: ->
     new Promise (resolve, reject) ->
       defer(resolve)
 
+  waitForEvent: (eventName, callback) ->
+    if callback?
+      waitForEventWithCallback(@element.window, eventName, callback)
+    else
+      waitForEventWithPromise(@element.window, eventName)
+
+  waitForNavigation: ->
+    @navigate -> true
 
   # Private
 
   navigate: (callback) ->
     @promiseNavigation (resolve) =>
-      waitForEvent(@element, "replicant-navigate").then (event) =>
+      waitForEventWithCallback @element, "replicant-navigate", (event) =>
         resolve(action: event.action, location: @element.location)
       defer(callback)
 
@@ -59,11 +65,14 @@ class Replicant.Session
   clickElement = (element) ->
     Replicant.triggerEvent(element, "click")
 
-  waitForEvent = (element, eventName) ->
+  waitForEventWithCallback = (element, eventName, callback) ->
+    element.addEventListener eventName, handler = (event) ->
+      element.removeEventListener(eventName, handler)
+      callback(event)
+
+  waitForEventWithPromise = (element, eventName) ->
     new Promise (resolve, reject) ->
-      element.addEventListener eventName, handler = (event) ->
-        element.removeEventListener(eventName, handler)
-        resolve(event)
+      waitForEventWithCallback(element, eventName, resolve)
 
   defer = (callback) ->
     setTimeout(callback, 1)
