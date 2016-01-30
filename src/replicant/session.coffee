@@ -26,6 +26,10 @@ class Replicant.Session
 
   waitForEvent: (eventName) ->
     waitForEvent(@element.window, eventName)
+  wait: ->
+    new Promise (resolve, reject) ->
+      defer(resolve)
+
 
   # Private
 
