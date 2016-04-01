@@ -23,7 +23,7 @@ class Replicant.Session
 
   clickSelector: (selector, callback) ->
     @navigate callback, =>
-      clickElement(@querySelector(selector))
+      @clickElement(@querySelector(selector))
 
   wait: (callback) ->
     defer(callback)
@@ -51,8 +51,10 @@ class Replicant.Session
     @element.document?.querySelector(selector) ?
       throw new Error "No element matching selector `#{selector}'"
 
-  clickElement = (element) ->
-    Replicant.triggerEvent(element, "click")
+  clickElement: (element) ->
+    event = Replicant.triggerEvent(element, "click")
+    if not event.defaultPrevented and element.hasAttribute("href")
+      @element.location = element.getAttribute("href")
 
   waitForEvent = (element, eventName, callback) ->
     element.addEventListener eventName, handler = (event) ->

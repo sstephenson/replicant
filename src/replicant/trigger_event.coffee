@@ -5,3 +5,4 @@ Replicant.triggerEvent = (element, eventName, attributes = {}) ->
   event.initEvent(eventName, true, true)
   Replicant.extendObject(event, attributes)
   element.dispatchEvent(event)
+  event
